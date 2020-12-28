@@ -12,7 +12,7 @@ preflight:
   #    error: '10'
   #    regex: 'Regular expression to match'
   # [boolean=false] Option for `run_drc`. Ignores the unconnected nets. Useful if you didn't finish the routing
-  ignore_unconnected: true
+  #ignore_unconnected: true
   # [boolean=false] Runs the DRC (Distance Rules Check). To ensure we have a valid PCB
   #run_drc: true
   # [boolean=false] Runs the ERC (Electrical Rules Check). To ensure the schematic is electrically correct
@@ -48,6 +48,50 @@ outputs:
     layers:
       - 'F.Cu'
       - 'B.Cu'
+
+  - name: 'gerber_drills'
+    comment: 'Exporting drillings of PCB to Gerbers.'
+    type: 'gerb_drill'
+    dir: 'gerber'
+    options:
+      # [dict|string] [hpgl,ps,gerber,dxf,svg,pdf] format for a graphical drill map.
+      # Not generated unless a format is specified
+      map:
+        # [string='%f-%i%v.%x'] name for the map file, KiCad defaults if empty (%i='PTH_drill_map'). Affected by global options
+        output: ''
+        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] format for a graphical drill map
+        type: 'gerber'
+      # [string='%f-%i%v.%x'] name for the drill file, KiCad defaults if empty (%i='PTH_drill'). Affected by global options
+      output: ''
+      # [boolean=false] use the auxiliar axis as origin for coordinates
+      use_aux_axis_as_origin: false
+
+  - name: 'position'
+    comment: 'Generating position information for the PCB components.'
+    type: 'position'
+    dir: 'gerber'
+    options:
+      # [list(dict)|list(string)] which columns are included in the output
+      #columns:
+        # [string=''] [Ref,Val,Package,PosX,PosY,Rot,Side] Internal name
+      #  id: ''
+        # [string=''] Name to use in the outut file. The id is used when empty
+      #  name: ''
+      # [string|list(string)=''] Name of the filter to mark components as not fitted.
+      # A short-cut to use for simple cases where a variant is an overkill
+      #dnf_filter: ''
+      # [string='ASCII'] [ASCII,CSV] format for the position file
+      format: 'ASCII'
+      # [boolean=true] only include the surface mount components
+      only_smd: true
+      # [string='%f-%i%v.%x'] output file name (%i='top_pos'|'bottom_pos'|'both_pos', %x='pos'|'csv'). Affected by global options
+      output: 'positions.csv'
+      # [boolean=true] generate two separated files, one for the top and another for the bottom
+      separate_files_for_front_and_back: true
+      # [string='millimeters'] [millimeters,inches] units used for the positions
+      units: 'millimeters'
+      # [string=''] Board variant to apply
+      #variant: ''
 
   ### PDFs ##########################################################
   - name: 'pdf-sch'
